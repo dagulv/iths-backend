@@ -1,17 +1,18 @@
 const cors = require("cors")
 const express = require("express")
+const mongoose = require("mongoose");
 const bodyParser = require('body-parser')
-const { default: mongoose } = require("mongoose")
 
-mongoose.connect("mongodb+srv://dag:o2kY9j54sD@cluster0.f84fs.mongodb.net/myFirstDatabase?retryWrites=true&w=majority", {
-   userNewUrlParser: true,
-   useUnifiedTopology: true,
+mongoose.connect("mongodb+srv://dag:o2kY9j54sD@cluster0.f84fs.mongodb.net/iths-labb2?retryWrites=true&w=majority", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
 });
 
 const Thread = require("./model/threads");
 const Reply = require("./model/replies");
 const Like = require("./model/likes");
 const User = require("./model/users");
+const { response } = require("express");
 
 const app = express()
 const PORT = process.env.PORT || 3001
@@ -27,6 +28,8 @@ app.get("/", (request, response)=>{
    response.set('Content-Type', 'application/json');
    body={"status": "available"}
    response.status(200).send(body)
+
+   User.create
 })
 
 app.get("/threads", (request, response)=>{
@@ -85,7 +88,7 @@ app.delete("/threads/:threadId/replies/:replyId/like", (request, response)=> {
 })
 
 
-
+//curl -X POST http://localhost:3001/users -H "Content-Type: application/json" -d "{\"username\":\"nisse\",\"password\":\"password\"}"
 //Create
 app.post("/users", (request, response) => {
    console.log(request.body)
@@ -93,12 +96,23 @@ app.post("/users", (request, response) => {
    user.save()
    response.status(200).send(request.body)
 })
-
+app.get("/users", (request, response) => {
+   User.find({}, (err, users) => {
+      const userMap = {};
+  
+      users.forEach((user) => {
+        userMap[user._id] = user;
+      });
+  
+      response.send(userMap);  
+    });
+})
 app.get("/users/:id", (request, response)=> {
-   console.log(request.params.id)
+   console.log('ID:', request.params.id);
    try {
       User.findById(request.params.id, (err, user) => {
-         if (err) throw error;
+         console.log('User:', user);
+         if (err) throw err;
          if (user) {
             response.status(200).json(user)
          } else {
