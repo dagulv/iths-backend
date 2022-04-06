@@ -3,7 +3,15 @@ const express = require("express")
 const mongoose = require("mongoose");
 const bodyParser = require('body-parser')
 
-mongoose.connect("mongodb+srv://dag:o2kY9j54sD@cluster0.f84fs.mongodb.net/iths-labb2?retryWrites=true&w=majority", {
+const dotenv = require('dotenv');
+var dotenvExpand = require('dotenv-expand')
+var env = dotenv.config()
+dotenvExpand.expand(env)
+
+const CONNECTION_STRING = process.env.CONNECTION_STRING
+const PORT = process.env.PORT || 3001
+
+mongoose.connect(CONNECTION_STRING, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -15,7 +23,7 @@ const User = require("./model/users");
 const { response } = require("express");
 
 const app = express()
-const PORT = process.env.PORT || 3001
+
 
 app.use('/healthcheck', require('./routes/healthcheck.js'));
 app.use(express.urlencoded({ extended: true }));
