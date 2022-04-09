@@ -1,3 +1,4 @@
+// Antal likes för thread/reply
 const mongoose = require("mongoose");
 
 const Like = mongoose.model(

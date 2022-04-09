@@ -1,0 +1,1 @@
+curl -X POST http://localhost:3001/threads/624d8338e75a986eddedf7c2/replies -H "Content-Type: application/json" -d "{\"name\":\"hello\",\"answerContent\":\"world\"}"
